@@ -183,6 +183,32 @@ function gameIsOver() { // Funktion prüft, ob das Spiel vorbei ist
     return currentQuestion >= questions.length; // true, wenn currentQuestion (Index) größer-gleich Anzahl Fragen ist
 }
 
+function showEndScreen () { // Zeigt den Bildschirm, wenn das Quiz vorbei ist
+    document.getElementById("endScreen").style = ''; // Endscreen sichtbar machen (leere Style bedeutet Standard anzeigen)
+    document.getElementById("questionBody").style = 'display: none'; // Fragebereich ausblenden    
+    document.getElementById("amountOfQuestions").innerHTML = questions.length; // Zeigt Gesamtzahl der Fragen an
+    document.getElementById("amountOfRightQuestion").innerHTML = rightQuestion; // Zeigt, wie viele Antworten richtig waren
+    document.getElementById("header-image").src = './img/Glückwunschkarte.png'; // Ändert das Bild zum "Glückwunsch"-Bild
+};
+
+function upDateToNextQuestion () { // (kleiner Tipp: Name "upDateToNextQuestion" enthält ein großes D, das ist nur Namenswahl)       
+    let question = questions[currentQuestion]; // Holt das aktuelle Frage-Objekt erneut
+
+        document.getElementById('question-number').innerHTML = currentQuestion + 1; // Zeigt die menschlichere Zahl (1 statt 0) an
+        document.getElementById("questionText").innerHTML = question["question"]; // Setzt den Fragetext in die Seite
+        document.getElementById("answer_1").innerHTML = question["answer_1"]; // Setzt Text für Antwort 1
+        document.getElementById("answer_2").innerHTML = question["answer_2"]; // Setzt Text für Antwort 2
+        document.getElementById("answer_3").innerHTML = question["answer_3"]; // Setzt Text für Antwort 3
+        document.getElementById("answer_4").innerHTML = question["answer_4"]; // Setzt Text für Antwort 4
+};
+
+function updateProgressBar() { // Berechnet und zeigt den Fortschritt im Balken
+        let percent = (currentQuestion + 1) / questions.length; // Anteil berechnen: z.B. 1/20, 2/20, ...
+        percent = Math.round(percent * 100); // Multipliziert mit 100 und rundet auf ganze Prozentzahl
+        document.getElementById("progress-bar").innerHTML = `${percent} %`; // Setzt den Text im Balken, z.B. "5 %"
+        document.getElementById("progress-bar").style = `width: ${percent}%`; // Setzt die Breite des Balkens visuell (z.B. width: 5%)  
+};
+
 function answer(selection) { // Wird aufgerufen, wenn eine Antwortkarte angeklickt wurde; selection z.B. "answer_1"
     let question = questions[currentQuestion]; // Holt das aktuelle Frage-Objekt aus dem Array
     let selectedQuestionNumber = selection.slice(-1); // Nimmt das letzte Zeichen von "answer_1" -> "1" (als String)
@@ -228,29 +254,3 @@ function restartGame () { // Setzt das Spiel komplett zurück und startet neu
 
     init(); // Startet die Anzeige neu (zeigt Frage 1 usw.)
 }
-
-function showEndScreen () { // Zeigt den Bildschirm, wenn das Quiz vorbei ist
-    document.getElementById("endScreen").style = ''; // Endscreen sichtbar machen (leere Style bedeutet Standard anzeigen)
-    document.getElementById("questionBody").style = 'display: none'; // Fragebereich ausblenden    
-    document.getElementById("amountOfQuestions").innerHTML = questions.length; // Zeigt Gesamtzahl der Fragen an
-    document.getElementById("amountOfRightQuestion").innerHTML = rightQuestion; // Zeigt, wie viele Antworten richtig waren
-    document.getElementById("header-image").src = './img/Glückwunschkarte.png'; // Ändert das Bild zum "Glückwunsch"-Bild
-};
-
-function upDateToNextQuestion () { // (kleiner Tipp: Name "upDateToNextQuestion" enthält ein großes D, das ist nur Namenswahl)       
-    let question = questions[currentQuestion]; // Holt das aktuelle Frage-Objekt erneut
-
-        document.getElementById('question-number').innerHTML = currentQuestion + 1; // Zeigt die menschlichere Zahl (1 statt 0) an
-        document.getElementById("questionText").innerHTML = question["question"]; // Setzt den Fragetext in die Seite
-        document.getElementById("answer_1").innerHTML = question["answer_1"]; // Setzt Text für Antwort 1
-        document.getElementById("answer_2").innerHTML = question["answer_2"]; // Setzt Text für Antwort 2
-        document.getElementById("answer_3").innerHTML = question["answer_3"]; // Setzt Text für Antwort 3
-        document.getElementById("answer_4").innerHTML = question["answer_4"]; // Setzt Text für Antwort 4
-};
-
-function updateProgressBar() { // Berechnet und zeigt den Fortschritt im Balken
-        let percent = (currentQuestion + 1) / questions.length; // Anteil berechnen: z.B. 1/20, 2/20, ...
-        percent = Math.round(percent * 100); // Multipliziert mit 100 und rundet auf ganze Prozentzahl
-        document.getElementById("progress-bar").innerHTML = `${percent} %`; // Setzt den Text im Balken, z.B. "5 %"
-        document.getElementById("progress-bar").style = `width: ${percent}%`; // Setzt die Breite des Balkens visuell (z.B. width: 5%)  
-};
