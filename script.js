@@ -1,4 +1,4 @@
-let questions = [
+let questions = [ // Ein Array (Liste) namens "questions" wird angelegt. Es enthält mehrere Objekte (jede Frage ist ein Objekt).
     {
         "question": "Wie heißt der Hauptcharakter von 'Naruto'?",
         "answer_1": "Naruto Uzumaki",
@@ -161,56 +161,55 @@ let questions = [
     }
 ];
 
-let rightQuestion = 0;
-let currentQuestion = 0;
+let rightQuestion = 0; // Variable: zählt, wie viele Fragen bisher richtig beantwortet wurden (Startwert 0)
+let currentQuestion = 0; // Variable: Index der aktuellen Frage im Array (Start bei 0 = erste Frage)
 
-function init() {
-    document.getElementById("all-questions").innerHTML = questions.length;
 
-    showQuestion();
+function init() { // Funktion init: wird beim Laden der Seite aufgerufen (body onload="init()")
+    document.getElementById("all-questions").innerHTML = questions.length; // Zeigt die Gesamtzahl der Fragen im Element mit ID "all-questions"
+    showQuestion(); // Ruft die Funktion auf, die entscheidet, welche Frage angezeigt werden soll
 }
 
-function showQuestion() {
-    if (gameIsOver()) {
-        showEndScreen();
-    }else {
-        updateProgressBar();
-        upDateToNextQuestion();        
+function showQuestion() { // Funktion, die steuert, ob das Spiel weitergeht oder beendet ist
+    if (gameIsOver()) { // Fragt: "Sind wir schon alle Fragen durch?"
+        showEndScreen(); // Wenn ja, zeige den Endbildschirm
+    }else { // Wenn noch Fragen übrig sind:
+        updateProgressBar(); // Aktualisiere den Fortschrittsbalken (visuell)
+        upDateToNextQuestion(); // Lade die aktuelle Frage und die Antworten in die Seite         
     }
 }
 
-function gameIsOver() {
-    return currentQuestion >= questions.length;
+function gameIsOver() { // Funktion prüft, ob das Spiel vorbei ist
+    return currentQuestion >= questions.length; // true, wenn currentQuestion (Index) größer-gleich Anzahl Fragen ist
 }
 
-function answer(selection) {
-    let question = questions[currentQuestion];
-    let selectedQuestionNumber = selection.slice(-1);
-    let idOfRightAnswer = `answer_${question['right_answer']}`;
+function answer(selection) { // Wird aufgerufen, wenn eine Antwortkarte angeklickt wurde; selection z.B. "answer_1"
+    let question = questions[currentQuestion]; // Holt das aktuelle Frage-Objekt aus dem Array
+    let selectedQuestionNumber = selection.slice(-1); // Nimmt das letzte Zeichen von "answer_1" -> "1" (als String)
+    let idOfRightAnswer = `answer_${question['right_answer']}`; // Baut die ID der richtigen Antwort zusammen, z.B. "answer_3"
     
-    if (selectedQuestionNumber == question['right_answer']) {
-        document.getElementById(selection).parentNode.classList.add('bg-success');
-        rightQuestion++;
-        
-    }else {
-        document.getElementById(selection).parentNode.classList.add('bg-danger');
-        document.getElementById(idOfRightAnswer).parentNode.classList.add('bg-success');
+    if (selectedQuestionNumber == question['right_answer']) { // Prüft: stimmt die Auswahl mit der richtigen Antwort überein?
+        document.getElementById(selection).parentNode.classList.add('bg-success'); // Bei richtig: ganze Antwortkarte grün machen
+        rightQuestion++; // Zähler für richtige Antworten um 1 erhöhen        
+    }else { // Wenn falsch geantwortet wurde:
+        document.getElementById(selection).parentNode.classList.add('bg-danger'); // Gewählte Karte rot färben
+        document.getElementById(idOfRightAnswer).parentNode.classList.add('bg-success'); // Richtige Karte zusätzlich grün markieren
     }
-    document.getElementById('next-button').disabled = false;
+    document.getElementById('next-button').disabled = false; // Aktiviert den Next-Button, damit man zur nächsten Frage kann
 };
 
-function nextQuestion() {
-    currentQuestion++;
+function nextQuestion() { // Funktion für den Next-Button
+    currentQuestion++; // Gehe zur nächsten Frage (Index um 1 erhöhen)
     
-    document.getElementById('next-button').disabled = true;
+    document.getElementById('next-button').disabled = true; // Deaktiviere wieder den Next-Button (bis zur nächsten Antwortwahl)
     
-    resetAnswerButton();
-    showQuestion();
+    resetAnswerButton(); // Entfernt die Farben (rot/grün) von den Antwortkarten
+    showQuestion(); // Zeigt nun die neue Frage (oder Endscreen, falls keine mehr vorhanden)
 };
 
-function resetAnswerButton() {
-    document.getElementById('answer_1').parentNode.classList.remove('bg-danger');
-    document.getElementById('answer_1').parentNode.classList.remove('bg-success');
+function resetAnswerButton() { // Entfernt Status-Klassen von allen Antwortkarten — damit sie neutral aussehen
+    document.getElementById('answer_1').parentNode.classList.remove('bg-danger'); // Entfernt roten Hintergrund von Antwort 1
+    document.getElementById('answer_1').parentNode.classList.remove('bg-success'); // Entfernt grünen Hintergrund von Antwort 1
     document.getElementById('answer_2').parentNode.classList.remove('bg-danger');
     document.getElementById('answer_2').parentNode.classList.remove('bg-success');
     document.getElementById('answer_3').parentNode.classList.remove('bg-danger');
@@ -219,39 +218,39 @@ function resetAnswerButton() {
     document.getElementById('answer_4').parentNode.classList.remove('bg-success');
 };
 
-function restartGame () {
-    document.getElementById("header-image").src = "./img/AnimeQuiz.png";
-     document.getElementById("questionBody").style = "";
-     document.getElementById("endScreen").style = "display: none";
+function restartGame () { // Setzt das Spiel komplett zurück und startet neu
+    document.getElementById("header-image").src = "./img/AnimeQuiz.png"; // Setzt das Kopf-Bild zurück auf das Quiz-Bild
+     document.getElementById("questionBody").style = ""; // Zeigt den Fragebereich wieder (entfernt evtl. display:none)
+     document.getElementById("endScreen").style = "display: none"; // Versteckt den Endscreen-Bereich
 
-    rightQuestion = 0;
-    currentQuestion = 0;
+    rightQuestion = 0; // Setzt den richtigen-Antworten-Zähler zurück auf 0
+    currentQuestion = 0; // Setzt die aktuelle Frage zurück auf die erste (Index 0)
 
-    init();
+    init(); // Startet die Anzeige neu (zeigt Frage 1 usw.)
 }
 
-function showEndScreen () {
-    document.getElementById("endScreen").style = '';
-    document.getElementById("questionBody").style = 'display: none';    
-    document.getElementById("amountOfQuestions").innerHTML = questions.length;
-    document.getElementById("amountOfRightQuestion").innerHTML = rightQuestion;
-    document.getElementById("header-image").src = './img/Glückwunschkarte.png';
+function showEndScreen () { // Zeigt den Bildschirm, wenn das Quiz vorbei ist
+    document.getElementById("endScreen").style = ''; // Endscreen sichtbar machen (leere Style bedeutet Standard anzeigen)
+    document.getElementById("questionBody").style = 'display: none'; // Fragebereich ausblenden    
+    document.getElementById("amountOfQuestions").innerHTML = questions.length; // Zeigt Gesamtzahl der Fragen an
+    document.getElementById("amountOfRightQuestion").innerHTML = rightQuestion; // Zeigt, wie viele Antworten richtig waren
+    document.getElementById("header-image").src = './img/Glückwunschkarte.png'; // Ändert das Bild zum "Glückwunsch"-Bild
 };
 
-function upDateToNextQuestion () {      
-    let question = questions[currentQuestion];
+function upDateToNextQuestion () { // (kleiner Tipp: Name "upDateToNextQuestion" enthält ein großes D, das ist nur Namenswahl)       
+    let question = questions[currentQuestion]; // Holt das aktuelle Frage-Objekt erneut
 
-        document.getElementById('question-number').innerHTML = currentQuestion + 1;
-        document.getElementById("questionText").innerHTML = question["question"];
-        document.getElementById("answer_1").innerHTML = question["answer_1"];
-        document.getElementById("answer_2").innerHTML = question["answer_2"];
-        document.getElementById("answer_3").innerHTML = question["answer_3"];
-        document.getElementById("answer_4").innerHTML = question["answer_4"];
+        document.getElementById('question-number').innerHTML = currentQuestion + 1; // Zeigt die menschlichere Zahl (1 statt 0) an
+        document.getElementById("questionText").innerHTML = question["question"]; // Setzt den Fragetext in die Seite
+        document.getElementById("answer_1").innerHTML = question["answer_1"]; // Setzt Text für Antwort 1
+        document.getElementById("answer_2").innerHTML = question["answer_2"]; // Setzt Text für Antwort 2
+        document.getElementById("answer_3").innerHTML = question["answer_3"]; // Setzt Text für Antwort 3
+        document.getElementById("answer_4").innerHTML = question["answer_4"]; // Setzt Text für Antwort 4
 };
 
-function updateProgressBar() {
-        let percent = (currentQuestion + 1) / questions.length;
-        percent = Math.round(percent * 100);
-        document.getElementById("progress-bar").innerHTML = `${percent} %`;
-        document.getElementById("progress-bar").style = `width: ${percent}%`;  
+function updateProgressBar() { // Berechnet und zeigt den Fortschritt im Balken
+        let percent = (currentQuestion + 1) / questions.length; // Anteil berechnen: z.B. 1/20, 2/20, ...
+        percent = Math.round(percent * 100); // Multipliziert mit 100 und rundet auf ganze Prozentzahl
+        document.getElementById("progress-bar").innerHTML = `${percent} %`; // Setzt den Text im Balken, z.B. "5 %"
+        document.getElementById("progress-bar").style = `width: ${percent}%`; // Setzt die Breite des Balkens visuell (z.B. width: 5%)  
 };
